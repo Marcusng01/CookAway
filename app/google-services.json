@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "552054306975",
+    "project_id": "cookaway-59718",
+    "storage_bucket": "cookaway-59718.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:552054306975:android:452759ebe5913311bd0aaa",
+        "android_client_info": {
+          "package_name": "com.example.cookaway"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhZhGk-RuONx-7se1MqYPGq9Q1O2uHXpw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
