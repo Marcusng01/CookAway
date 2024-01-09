@@ -19,15 +19,18 @@ package com.example.cookaway.screens.login
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.cookaway.R
 import com.example.cookaway.R.string as AppText
 import com.example.cookaway.common.composable.*
 import com.example.cookaway.common.ext.basicButton
+import com.example.cookaway.common.ext.card
 import com.example.cookaway.common.ext.fieldModifier
 import com.example.cookaway.common.ext.textButton
 import com.example.cookaway.theme.MakeItSoTheme
@@ -35,6 +38,7 @@ import com.example.cookaway.theme.MakeItSoTheme
 @Composable
 fun LoginScreen(
   openAndPopUp: (String, String) -> Unit,
+  openScreen: (String) -> Unit,
   viewModel: LoginViewModel = hiltViewModel()
 ) {
   val uiState by viewModel.uiState
@@ -44,10 +48,12 @@ fun LoginScreen(
     onEmailChange = viewModel::onEmailChange,
     onPasswordChange = viewModel::onPasswordChange,
     onSignInClick = { viewModel.onSignInClick(openAndPopUp) },
-    onForgotPasswordClick = viewModel::onForgotPasswordClick
+    onForgotPasswordClick = viewModel::onForgotPasswordClick,
+    onSignUpClick = { viewModel.onSignUpClick(openScreen) },
   )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun LoginScreenContent(
   modifier: Modifier = Modifier,
@@ -55,7 +61,8 @@ fun LoginScreenContent(
   onEmailChange: (String) -> Unit,
   onPasswordChange: (String) -> Unit,
   onSignInClick: () -> Unit,
-  onForgotPasswordClick: () -> Unit
+  onForgotPasswordClick: () -> Unit,
+  onSignUpClick: () -> Unit,
 ) {
   BasicToolbar(AppText.login_details)
 
@@ -75,6 +82,11 @@ fun LoginScreenContent(
     BasicTextButton(AppText.forgot_password, Modifier.textButton()) {
       onForgotPasswordClick()
     }
+
+
+    RegularCardEditor(AppText.create_account, R.drawable.ic_create_account, "", Modifier.card()) {
+      onSignUpClick()
+    }
   }
 }
 
@@ -91,7 +103,8 @@ fun LoginScreenPreview() {
       onEmailChange = { },
       onPasswordChange = { },
       onSignInClick = { },
-      onForgotPasswordClick = { }
+      onForgotPasswordClick = { },
+      onSignUpClick = { }
     )
   }
 }

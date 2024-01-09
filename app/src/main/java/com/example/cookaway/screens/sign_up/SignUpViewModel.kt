@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import com.example.cookaway.R.string as AppText
 import com.example.cookaway.SETTINGS_SCREEN
 import com.example.cookaway.SIGN_UP_SCREEN
+import com.example.cookaway.SPLASH_SCREEN
 import com.example.cookaway.common.ext.isValidEmail
 import com.example.cookaway.common.ext.isValidPassword
 import com.example.cookaway.common.ext.passwordMatches
@@ -73,7 +74,8 @@ class SignUpViewModel @Inject constructor(
 
     launchCatching {
       accountService.linkAccount(email, password)
-      openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
+      openAndPopUp(SPLASH_SCREEN, SIGN_UP_SCREEN)
+      //openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
     }
   }
 }

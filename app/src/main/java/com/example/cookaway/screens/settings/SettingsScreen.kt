@@ -40,9 +40,10 @@ fun SettingsScreen(
   openScreen: (String) -> Unit,
   viewModel: SettingsViewModel = hiltViewModel()
 ) {
-  val uiState by viewModel.uiState.collectAsState(
-    initial = SettingsUiState(false)
-  )
+  val uiState = viewModel.uiState
+//  val uiState by viewModel.uiState.collectAsState(
+//    initial = SettingsUiState(false)
+//  )
   SettingsScreenContent(
     uiState = uiState,
     onLoginClick = { viewModel.onLoginClick(openScreen) },
@@ -71,7 +72,7 @@ fun SettingsScreenContent(
 
     Spacer(modifier = Modifier.spacer())
 
-    if (uiState.isAnonymousAccount) {
+    if (!uiState.hasUser) {
       RegularCardEditor(AppText.sign_in, AppIcon.ic_sign_in, "", Modifier.card()) {
         onLoginClick()
       }
@@ -145,7 +146,7 @@ private fun DeleteMyAccountCard(deleteMyAccount: () -> Unit) {
 @ExperimentalMaterialApi
 @Composable
 fun SettingsScreenPreview() {
-  val uiState = SettingsUiState(isAnonymousAccount = false)
+  val uiState = SettingsUiState(hasUser = false)
 
   MakeItSoTheme {
     SettingsScreenContent(

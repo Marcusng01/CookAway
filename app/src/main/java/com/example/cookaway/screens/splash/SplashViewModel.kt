@@ -17,6 +17,7 @@ limitations under the License.
 package com.example.cookaway.screens.splash
 
 import androidx.compose.runtime.mutableStateOf
+import com.example.cookaway.LOGIN_SCREEN
 import com.example.cookaway.SPLASH_SCREEN
 import com.example.cookaway.TASKS_SCREEN
 import com.example.cookaway.model.service.AccountService
@@ -42,19 +43,24 @@ class SplashViewModel @Inject constructor(
   fun onAppStart(openAndPopUp: (String, String) -> Unit) {
 
     showError.value = false
-    if (accountService.hasUser) openAndPopUp(TASKS_SCREEN, SPLASH_SCREEN)
-    else createAnonymousAccount(openAndPopUp)
-  }
-
-  private fun createAnonymousAccount(openAndPopUp: (String, String) -> Unit) {
-    launchCatching(snackbar = false) {
-      try {
-        accountService.createAnonymousAccount()
-      } catch (ex: FirebaseAuthException) {
-        showError.value = true
-        throw ex
-      }
+    if (accountService.hasUser) {
       openAndPopUp(TASKS_SCREEN, SPLASH_SCREEN)
     }
+    else
+    {
+      openAndPopUp(LOGIN_SCREEN, SPLASH_SCREEN)
+    }
   }
+
+//  private fun createAnonymousAccount(openAndPopUp: (String, String) -> Unit) {
+//    launchCatching(snackbar = false) {
+//      try {
+//        accountService.createAnonymousAccount()
+//      } catch (ex: FirebaseAuthException) {
+//        showError.value = true
+//        throw ex
+//      }
+//      openAndPopUp(TASKS_SCREEN, SPLASH_SCREEN)
+//    }
+//  }
 }

@@ -20,6 +20,8 @@ import androidx.compose.runtime.mutableStateOf
 import com.example.cookaway.LOGIN_SCREEN
 import com.example.cookaway.R.string as AppText
 import com.example.cookaway.SETTINGS_SCREEN
+import com.example.cookaway.SIGN_UP_SCREEN
+import com.example.cookaway.TASKS_SCREEN
 import com.example.cookaway.common.ext.isValidEmail
 import com.example.cookaway.common.snackbar.SnackbarManager
 import com.example.cookaway.model.service.AccountService
@@ -62,7 +64,8 @@ class LoginViewModel @Inject constructor(
 
     launchCatching {
       accountService.authenticate(email, password)
-      openAndPopUp(SETTINGS_SCREEN, LOGIN_SCREEN)
+//      openAndPopUp(SETTINGS_SCREEN, LOGIN_SCREEN)
+      openAndPopUp(TASKS_SCREEN, LOGIN_SCREEN)
     }
   }
 
@@ -77,4 +80,6 @@ class LoginViewModel @Inject constructor(
       SnackbarManager.showMessage(AppText.recovery_email_sent)
     }
   }
+  fun onSignUpClick(openScreen: (String) -> Unit) = openScreen(SIGN_UP_SCREEN)
+
 }

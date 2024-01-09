@@ -16,4 +16,4 @@ limitations under the License.
 
 package com.example.cookaway.screens.settings
 
-data class SettingsUiState(val isAnonymousAccount: Boolean = true){}
+data class SettingsUiState(val hasUser: Boolean = true){}
