@@ -49,12 +49,26 @@ fun BasicField(
 }
 
 @Composable
+fun MoneyField(@StringRes text: Int, value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier){
+  OutlinedTextField(
+    singleLine = true,
+    modifier = modifier,
+    value = value,
+    onValueChange = { onNewValue(it) },
+    placeholder = { Text(stringResource(text)) },
+    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+  )
+}
+
+
+@Composable
 fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier) {
   OutlinedTextField(
     singleLine = true,
     modifier = modifier,
     value = value,
     onValueChange = { onNewValue(it) },
+//    onValueChange = {},
     placeholder = { Text(stringResource(AppText.email)) },
     leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") }
   )

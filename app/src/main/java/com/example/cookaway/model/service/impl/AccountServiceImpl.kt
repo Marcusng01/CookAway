@@ -18,19 +18,25 @@ package com.example.cookaway.model.service.impl
 
 import com.example.cookaway.model.User
 import com.example.cookaway.model.service.AccountService
+import com.example.cookaway.model.UserData
 import com.example.cookaway.model.service.trace
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.dataObjects
 import javax.inject.Inject
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
 
-class AccountServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AccountService {
+class AccountServiceImpl @Inject constructor(private val firestore: FirebaseFirestore, private val auth: FirebaseAuth) : AccountService {
 
   override val currentUserId: String
     get() = auth.currentUser?.uid.orEmpty()
+
+  override val currentUserEmail: String
+    get() = auth.currentUser?.email.orEmpty()
 
   override val hasUser: Boolean
     get() = auth.currentUser != null

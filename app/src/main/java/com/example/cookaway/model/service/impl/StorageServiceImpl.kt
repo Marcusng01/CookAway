@@ -59,6 +59,7 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
     firestore.collection(TASK_COLLECTION).document(taskId).delete().await()
   }
 
+
   companion object {
     private const val USER_ID_FIELD = "userId"
     private const val TASK_COLLECTION = "tasks"

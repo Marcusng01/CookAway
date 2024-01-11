@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.cookaway.common.ext.dropdownSelector
+import com.example.cookaway.common.ext.horizontalSpacer
 
 @ExperimentalMaterialApi
 @Composable
@@ -83,6 +84,38 @@ private fun CardEditor(
   }
 }
 
+@ExperimentalMaterialApi
+@Composable
+fun RegularCardDescriptor(
+  @StringRes title: Int,
+  @DrawableRes icon: Int,
+  content: String,
+  highlightColor: Color = MaterialTheme.colors.onSurface,
+  modifier: Modifier
+) {
+  Card(
+    backgroundColor = MaterialTheme.colors.onPrimary,
+    modifier = modifier,
+    elevation = 0.dp
+  ) {
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+      modifier = Modifier.fillMaxWidth().padding(16.dp)
+    ) {
+      Icon(painter = painterResource(icon), contentDescription = "Icon", tint = highlightColor)
+
+      Spacer(modifier = Modifier.horizontalSpacer())
+
+      Column(modifier = Modifier.weight(1f)) { Text(stringResource(title), color = highlightColor) }
+
+      if (content.isNotBlank()) {
+        Text(text = content, modifier = Modifier.padding(16.dp, 0.dp))
+      }
+    }
+  }
+}
+
 @Composable
 @ExperimentalMaterialApi
 fun CardSelector(
@@ -96,3 +129,5 @@ fun CardSelector(
     DropdownSelector(label, options, selection, Modifier.dropdownSelector(), onNewValue)
   }
 }
+
+

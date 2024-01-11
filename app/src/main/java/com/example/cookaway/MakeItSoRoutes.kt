@@ -22,6 +22,8 @@ const val LOGIN_SCREEN = "LoginScreen"
 const val SIGN_UP_SCREEN = "SignUpScreen"
 const val TASKS_SCREEN = "TasksScreen"
 const val EDIT_TASK_SCREEN = "EditTaskScreen"
+const val DEPOSIT_SCREEN = "DepositScreen"
+const val WITHDRAW_SCREEN = "WithdrawScreen"
 
 const val TASK_ID = "taskId"
 const val TASK_ID_ARG = "?$TASK_ID={$TASK_ID}"

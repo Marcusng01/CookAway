@@ -39,12 +39,14 @@ import androidx.navigation.navArgument
 import com.example.cookaway.common.composable.PermissionDialog
 import com.example.cookaway.common.composable.RationaleDialog
 import com.example.cookaway.common.snackbar.SnackbarManager
+import com.example.cookaway.screens.deposit.DepositScreen
 import com.example.cookaway.screens.edit_task.EditTaskScreen
 import com.example.cookaway.screens.login.LoginScreen
 import com.example.cookaway.screens.settings.SettingsScreen
 import com.example.cookaway.screens.sign_up.SignUpScreen
 import com.example.cookaway.screens.splash.SplashScreen
 import com.example.cookaway.screens.tasks.TasksScreen
+import com.example.cookaway.screens.withdraw.WithdrawScreen
 import com.example.cookaway.theme.MakeItSoTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -142,7 +144,14 @@ fun NavGraphBuilder.makeItSoGraph(appState: MakeItSoAppState) {
     SignUpScreen(openAndPopUp = { route, popUp -> appState.navigateAndPopUp(route, popUp) })
   }
 
-  composable(TASKS_SCREEN) { TasksScreen(openScreen = { route -> appState.navigate(route) }) }
+  composable(TASKS_SCREEN) {
+    TasksScreen(openScreen = { route -> appState.navigate(route) }) }
+
+  composable(DEPOSIT_SCREEN) {
+    DepositScreen() }
+
+  composable(WITHDRAW_SCREEN) {
+    WithdrawScreen() }
 
   composable(
     route = "$EDIT_TASK_SCREEN$TASK_ID_ARG",

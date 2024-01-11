@@ -83,7 +83,6 @@ fun LoginScreenContent(
       onForgotPasswordClick()
     }
 
-
     RegularCardEditor(AppText.create_account, R.drawable.ic_create_account, "", Modifier.card()) {
       onSignUpClick()
     }
@@ -108,3 +107,5 @@ fun LoginScreenPreview() {
     )
   }
 }
+
+
