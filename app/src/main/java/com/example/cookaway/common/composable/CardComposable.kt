@@ -18,15 +18,25 @@ package com.example.cookaway.common.composable
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.cookaway.R
+import com.example.cookaway.common.ext.basicButton
 import com.example.cookaway.common.ext.dropdownSelector
 import com.example.cookaway.common.ext.horizontalSpacer
 
@@ -131,3 +141,83 @@ fun CardSelector(
 }
 
 
+@Preview(showBackground =true)
+@Composable
+fun PostPreview(){
+    Post(
+      "Wai Kit",
+      R.drawable.ic_user_circle,
+      "Food",
+      "Ingredients and Recipe",
+      false)
+}
+
+@Composable
+fun Post(
+  username: String,
+  image: Int,
+  title: String,
+  description: String,
+  bought: Boolean,
+){
+  Column {
+    PostUser(username)
+    PostImage(image)
+    PostTitle(title)
+    PostDescription(description,bought)
+  }
+}
+
+@Composable
+fun PostUser(username: String) {
+  Row(modifier = Modifier.padding(16.dp)) {
+    Image(
+      painter = painterResource(R.drawable.ic_user_circle),
+      contentDescription = null,
+      modifier = Modifier
+        .size(40.dp)
+        .clip(CircleShape)
+    )
+    Text(
+      text = username,
+      modifier = Modifier.padding(horizontal = 8.dp)
+    )
+  }
+}
+
+
+@Composable
+fun PostImage(image: Int) {
+  Image(
+    painter = painterResource(image),
+    contentDescription = null,
+    modifier = Modifier.fillMaxWidth()
+  )
+}
+
+@Composable
+fun PostTitle(title: String) {
+  Text(
+    text = title,
+    fontSize = 32.sp, // Adjust the font size as needed
+    fontWeight = FontWeight.Bold,
+    color = Color.Black, // Set the text color to black
+    textAlign = TextAlign.Center, // Center the text
+    modifier = Modifier
+  )
+}
+
+@Composable
+fun PostDescription(description: String, bought: Boolean) {
+  Column(
+    modifier = Modifier.padding(16.dp),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    if (!bought) {
+      BasicButton(R.string.buy, Modifier.basicButton(), { })
+    } else {
+      Text(text = description)
+    }
+  }
+}

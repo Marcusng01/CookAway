@@ -25,13 +25,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.cookaway.R
 import com.example.cookaway.R.drawable as AppIcon
 import com.example.cookaway.R.string as AppText
 import com.example.cookaway.common.composable.ActionToolbar
+import com.example.cookaway.common.composable.Post
 import com.example.cookaway.common.ext.smallSpacer
 import com.example.cookaway.common.ext.toolbarActions
 import com.example.cookaway.model.Task
@@ -94,17 +97,34 @@ fun TasksScreenContent(
       )
 
       Spacer(modifier = Modifier.smallSpacer())
-
-      LazyColumn {
-        items(tasks, key = { it.id }) { taskItem ->
-          TaskItem(
-            options = options,
-            task = taskItem,
-            onCheckChange = { onTaskCheckChange(taskItem) },
-            onActionClick = { action -> onTaskActionClick(openScreen, taskItem, action) }
-          )
-        }
-      }
+      Post(
+        "Wai Kit",
+        R.drawable.ic_user_circle,
+        "Food",
+        "Ingredients and Recipe",
+        false)
+      Post(
+        "Wai Kit",
+        R.drawable.ic_user_circle,
+        "Food",
+        "Ingredients and Recipe",
+        false)
+      Post(
+        "Wai Kit",
+        R.drawable.ic_user_circle,
+        "Food",
+        "Ingredients and Recipe",
+        false)
+//      LazyColumn {
+//        items(tasks, key = { it.id }) { taskItem ->
+//          TaskItem(
+//            options = options,
+//            task = taskItem,
+//            onCheckChange = { onTaskCheckChange(taskItem) },
+//            onActionClick = { action -> onTaskActionClick(openScreen, taskItem, action) }
+//          )
+//        }
+//      }
     }
   }
 }
