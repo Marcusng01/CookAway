@@ -21,6 +21,7 @@ import com.example.cookaway.model.UserData
 import com.example.cookaway.model.service.AccountService
 import com.example.cookaway.model.service.UserStorageService
 import com.example.cookaway.model.service.trace
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.channels.awaitClose
@@ -47,18 +48,35 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
     awaitClose { listener.remove() }
   }
 
-  override suspend fun topUp(balanceAmount: Double, topUpAmount: Double): Unit =
-    trace(TOPUP_BALANCE_TRACE) {
-      val docRef = firestore.collection(USERS_COLLECTION).document(auth.currentUserId)
-      docRef.update(BALANCE_FIELD, balanceAmount + topUpAmount).await()
+  override suspend fun topUp(topUpAmount: Double, userId:String ): Unit =
+    trace(TOP_UP_BALANCE_TRACE) {
+      val docRef = firestore.collection(USERS_COLLECTION).document(userId)
+      docRef.update(BALANCE_FIELD, FieldValue.increment(topUpAmount)).await()
     }
 
+  override suspend fun withdraw(deductAmount: Double, userId:String): Unit =
+    trace(WITHDRAW_BALANCE_TRACE) {
+      val docRef = firestore.collection(USERS_COLLECTION).document(userId)
+      docRef.update(BALANCE_FIELD, FieldValue.increment(-deductAmount)).await()
+    }
+
+  override suspend fun updatePurchaseList(postID: String, userId: String):Unit =
+    trace(PURCHASE_TRACE){
+      val docRef = firestore.collection(USERS_COLLECTION).document(userId)
+      docRef.get().addOnSuccessListener { document ->
+        if (document != null) {
+          val currentArray = document.get(PURCHASE_LIST_FIELD) as List<String>
+          val newArray = currentArray + postID
+          docRef.update(PURCHASE_LIST_FIELD, newArray)
+        }
+      }
+    }
   companion object {
     private const val USERS_COLLECTION = "users"
     private const val BALANCE_FIELD = "balance"
-//    private const val PURCHASE_LIST_FIELD = "purchaseList"
-    private const val TOPUP_BALANCE_TRACE = "topupBalance"
+    private const val PURCHASE_LIST_FIELD = "purchaseList"
+    private const val TOP_UP_BALANCE_TRACE = "topUpBalance"
+    private const val WITHDRAW_BALANCE_TRACE = "withdrawBalance"
+    private const val PURCHASE_TRACE = "purchase"
   }
-
-
 }

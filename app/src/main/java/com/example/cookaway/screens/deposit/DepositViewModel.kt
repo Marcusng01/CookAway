@@ -43,7 +43,8 @@ class DepositViewModel @Inject constructor(
   fun onTopUpClick() {
     val topUpAmountDouble = topUpAmount.value.toDouble();
     launchCatching {
-      userStorageService.topUp(balanceAmount.value, topUpAmountDouble)
+//      userStorageService.topUp(balanceAmount.value, topUpAmountDouble, "")
+      userStorageService.topUp(topUpAmountDouble, accountService.currentUserId)
     }
   }
   fun onTopUpChange(newValue: String) {

@@ -24,21 +24,20 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.cookaway.R
 import com.example.cookaway.R.drawable as AppIcon
 import com.example.cookaway.R.string as AppText
 import com.example.cookaway.common.composable.ActionToolbar
-import com.example.cookaway.common.composable.Post
+import com.example.cookaway.common.composable.PostCard
 import com.example.cookaway.common.ext.smallSpacer
 import com.example.cookaway.common.ext.toolbarActions
-import com.example.cookaway.model.Task
-import com.example.cookaway.theme.MakeItSoTheme
+import com.example.cookaway.model.Post
+import com.example.cookaway.model.UserData
 
 @Composable
 @ExperimentalMaterialApi
@@ -46,49 +45,58 @@ fun TasksScreen(
   openScreen: (String) -> Unit,
   viewModel: TasksViewModel = hiltViewModel()
 ) {
-  val tasks = viewModel
-    .tasks
+  val userData = viewModel.currentUserData.collectAsStateWithLifecycle(UserData())
+  val posts = viewModel
+    .posts
     .collectAsStateWithLifecycle(emptyList())
   val options by viewModel.options
+
   TasksScreenContent(
-    onAddClick = viewModel::onAddClick,
     onSettingsClick = viewModel::onSettingsClick,
-    onTaskCheckChange = viewModel::onTaskCheckChange,
-    onTaskActionClick = viewModel::onTaskActionClick,
+    onViewClick = viewModel::onViewClick,
+    onCreateClick = viewModel::onCreateClick,
     openScreen = openScreen,
-    tasks = tasks.value,
-    options = options,
+    posts = posts.value,
+    onBuyClick = viewModel::onBuyClick,
+    currentUserData = userData.value,
   )
 
-  LaunchedEffect(viewModel) { viewModel.loadTaskOptions() }
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 @ExperimentalMaterialApi
 fun TasksScreenContent(
-  modifier: Modifier = Modifier,
-  onAddClick: ((String) -> Unit) -> Unit,
-  onSettingsClick: ((String) -> Unit) -> Unit,
-  onTaskCheckChange: (Task) -> Unit,
-  onTaskActionClick: ((String) -> Unit, Task, String) -> Unit,
+//  modifier: Modifier = Modifier,
   openScreen: (String) -> Unit,
-  tasks: List<Task>,
-  options: List<String>,
+  onSettingsClick: ((String) -> Unit) -> Unit,
+  onCreateClick: ((String) -> Unit) -> Unit,
+  onViewClick: ((String) -> Unit, Post) -> Unit,
+  onBuyClick: (Post,UserData) -> Unit,
+  posts: List<Post>,
+  currentUserData: UserData,
 ) {
   Scaffold(
     floatingActionButton = {
       FloatingActionButton(
-        onClick = { onAddClick(openScreen) },
+        onClick = { onCreateClick(openScreen)},
         backgroundColor = MaterialTheme.colors.primary,
         contentColor = MaterialTheme.colors.onPrimary,
-        modifier = modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp)
       ) {
-        Icon(Icons.Filled.Add, "Add")
+        Row(
+          modifier = Modifier.padding(16.dp),
+          verticalAlignment = Alignment.CenterVertically
+        ){
+          Text(stringResource(AppText.create))
+          Icon(Icons.Filled.Add, "Add")
+        }
       }
     }
   ) {
-    Column(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+    Column(modifier = Modifier
+      .fillMaxWidth()
+      .fillMaxHeight()) {
       ActionToolbar(
         title = AppText.tasks,
         modifier = Modifier.toolbarActions(),
@@ -96,52 +104,32 @@ fun TasksScreenContent(
         endAction = { onSettingsClick(openScreen) }
       )
 
-      Spacer(modifier = Modifier.smallSpacer())
-      Post(
-        "Wai Kit",
-        R.drawable.ic_user_circle,
-        "Food",
-        "Ingredients and Recipe",
-        false)
-      Post(
-        "Wai Kit",
-        R.drawable.ic_user_circle,
-        "Food",
-        "Ingredients and Recipe",
-        false)
-      Post(
-        "Wai Kit",
-        R.drawable.ic_user_circle,
-        "Food",
-        "Ingredients and Recipe",
-        false)
-//      LazyColumn {
-//        items(tasks, key = { it.id }) { taskItem ->
-//          TaskItem(
-//            options = options,
-//            task = taskItem,
-//            onCheckChange = { onTaskCheckChange(taskItem) },
-//            onActionClick = { action -> onTaskActionClick(openScreen, taskItem, action) }
-//          )
-//        }
-//      }
+
+      LazyColumn {
+        items(posts, key = { it.id }) { postItem ->
+          val isInPurchaseList = postItem.id in currentUserData.purchaseList
+          PostCard(
+            post = postItem,
+            bought = isInPurchaseList,
+            onBuyClick = onBuyClick,
+            currentUserData = currentUserData,
+            onViewClick = onViewClick,
+            openScreen = openScreen
+            )
+          Spacer(modifier = Modifier.smallSpacer())
+        }
+      }
     }
   }
 }
-
-@Preview(showBackground = true)
-@ExperimentalMaterialApi
-@Composable
-fun TasksScreenPreview() {
-  MakeItSoTheme {
-    TasksScreenContent(
-      onAddClick = { },
-      onSettingsClick = { },
-      onTaskCheckChange = { },
-      onTaskActionClick = { _, _, _ -> },
-      openScreen = { },
-      tasks = emptyList<Task>(),
-      options = emptyList<String>(),
-    )
-  }
-}
+//@OptIn(ExperimentalMaterialApi::class)
+//@Composable
+//fun TasksScreenPreview() {
+//  MakeItSoTheme {
+//    TasksScreenContent(
+//      onSettingsClick = { },
+//      openScreen = { },
+//      posts = emptyList<Post>(),
+//    )
+//  }
+//}

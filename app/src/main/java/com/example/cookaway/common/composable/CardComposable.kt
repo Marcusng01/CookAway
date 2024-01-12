@@ -18,16 +18,13 @@ package com.example.cookaway.common.composable
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,10 +32,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.cookaway.R
-import com.example.cookaway.common.ext.basicButton
+import com.example.cookaway.common.ext.card
 import com.example.cookaway.common.ext.dropdownSelector
 import com.example.cookaway.common.ext.horizontalSpacer
+import com.example.cookaway.model.Post
+import com.example.cookaway.model.UserData
 
 @ExperimentalMaterialApi
 @Composable
@@ -81,7 +81,9 @@ private fun CardEditor(
   ) {
     Row(
       verticalAlignment = Alignment.CenterVertically,
-      modifier = Modifier.fillMaxWidth().padding(16.dp)
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)
     ) {
       Column(modifier = Modifier.weight(1f)) { Text(stringResource(title), color = highlightColor) }
 
@@ -111,7 +113,9 @@ fun RegularCardDescriptor(
     Row(
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-      modifier = Modifier.fillMaxWidth().padding(16.dp)
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)
     ) {
       Icon(painter = painterResource(icon), contentDescription = "Icon", tint = highlightColor)
 
@@ -144,54 +148,81 @@ fun CardSelector(
 @Preview(showBackground =true)
 @Composable
 fun PostPreview(){
+  PostScreenContents(
     Post(
-      "Wai Kit",
-      R.drawable.ic_user_circle,
-      "Food",
-      "Ingredients and Recipe",
-      false)
+      id ="",
+      userId = "Wai Kit",
+      imageUrl = "https://firebasestorage.googleapis.com/v0/b/cookaway-59718.appspot.com/o/burger.jpeg?alt=media&token=5004b3c8-cfbb-41c9-a2bd-7345ec6afb7f",
+      title = "Food",
+      description = "Ingredients and Recipe",
+    ),
+  )
 }
+//@Composable
+//fun PostCard(
+//  post: Post,
+//  bought: Boolean = true,
+//  onBuyClick: (String)-> Unit,
+//  onViewClick: (String)-> Unit
+//){
+//  Column {
+//    PostUser(post.userId)
+//    PostImage(post.imageUrl)
+//    PostTitle(post.title)
+//    PostPurchaseOrView(
+//      onBuyClick = onBuyClick,
+//      onViewClick = onViewClick,
+//      bought = bought,
+//    )
+//  }
+//}
+
+
 
 @Composable
-fun Post(
-  username: String,
-  image: Int,
-  title: String,
-  description: String,
-  bought: Boolean,
+fun PostScreenContents(
+  post: Post,
 ){
   Column {
-    PostUser(username)
-    PostImage(image)
-    PostTitle(title)
-    PostDescription(description,bought)
+//    PostUser(post.userId)
+    PostImage(post.imageUrl)
+    PostTitle(post.title)
+    PostDescription(post.description)
   }
 }
 
 @Composable
-fun PostUser(username: String) {
-  Row(modifier = Modifier.padding(16.dp)) {
-    Image(
-      painter = painterResource(R.drawable.ic_user_circle),
-      contentDescription = null,
-      modifier = Modifier
-        .size(40.dp)
-        .clip(CircleShape)
-    )
-    Text(
-      text = username,
-      modifier = Modifier.padding(horizontal = 8.dp)
+fun PostCard(
+  currentUserData: UserData,
+  post: Post,
+  bought: Boolean = true,
+  onBuyClick: (Post, UserData) -> Unit,
+  openScreen: (String)->Unit,
+  onViewClick: ((String)->Unit, Post) -> Unit,
+){
+  Column {
+//    PostUser(post.userId)
+    PostImage(post.imageUrl)
+    PostTitle(post.title)
+    PostPurchaseOrView(
+      onBuyClick = onBuyClick,
+      bought = bought,
+      currentUserData = currentUserData,
+      post = post,
+      openScreen = openScreen,
+      onViewClick = onViewClick,
     )
   }
 }
-
-
 @Composable
-fun PostImage(image: Int) {
-  Image(
-    painter = painterResource(image),
-    contentDescription = null,
-    modifier = Modifier.fillMaxWidth()
+fun PostImage(imageURL: String) {
+  AsyncImage(
+    model = imageURL,
+    contentDescription = "Food",
+    modifier = Modifier
+      .fillMaxWidth()
+      .aspectRatio(1f),
+    contentScale = ContentScale.Crop
   )
 }
 
@@ -208,16 +239,87 @@ fun PostTitle(title: String) {
 }
 
 @Composable
-fun PostDescription(description: String, bought: Boolean) {
+fun PostDescription(description: String) {
+  Column(
+    modifier = Modifier.padding(16.dp),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+  ) {
+    Text(text = description)
+  }
+}
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun PostPurchaseOrView(
+  bought: Boolean,
+  openScreen: (String)->Unit,
+  onViewClick: ((String)->Unit, Post) -> Unit,
+  onBuyClick: (Post, UserData) -> Unit,
+  currentUserData: UserData,
+  post: Post,
+) {
   Column(
     modifier = Modifier.padding(16.dp),
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
     if (!bought) {
-      BasicButton(R.string.buy, Modifier.basicButton(), { })
+      BuyCard(
+        currentUserData = currentUserData,
+        post = post,
+        onBuyClick = onBuyClick,
+      )
     } else {
-      Text(text = description)
+      RegularCardEditor(
+        title = R.string.view,
+        icon = R.drawable.ic_visibility_on,
+        content = "",
+        modifier = Modifier.card()
+      ) {
+        onViewClick(openScreen, post)
+      }
+    }
+  }
+}
+@ExperimentalMaterialApi
+@Composable
+private fun BuyCard(
+  currentUserData: UserData,
+  post: Post,
+  onBuyClick: (Post, UserData) -> Unit
+)
+{
+  var price = post.price
+  var balanceAmount = currentUserData.balance
+  var showWarningDialog by remember { mutableStateOf(false) }
+
+  RegularCardEditor(R.string.buy, R.drawable.ic_exit, "RM $price", Modifier.card()) {
+    showWarningDialog = true
+  }
+
+  if (showWarningDialog) {
+    if(balanceAmount > price){
+      AlertDialog(
+        title = { Text(stringResource(R.string.confirm_purchase)) },
+        text = { Text(stringResource(R.string.balance_after_purchase) + (balanceAmount-price).toString()) },
+        dismissButton = { DialogCancelButton(R.string.cancel) { showWarningDialog = false } },
+        confirmButton = {
+          DialogConfirmButton(R.string.yes) {
+            onBuyClick(post,currentUserData)
+            showWarningDialog = false
+          }
+        },
+        onDismissRequest = { showWarningDialog = false }
+      )
+    }
+    else{
+      AlertDialog(
+        title = { Text(stringResource(R.string.confirm_purchase)) },
+        text = { Text(stringResource(R.string.balance_after_purchase) + (balanceAmount-price).toString()) },
+        dismissButton = { DialogCancelButton(R.string.okay) { showWarningDialog = false } },
+        confirmButton = {},
+        onDismissRequest = { showWarningDialog = false }
+      )
     }
   }
 }

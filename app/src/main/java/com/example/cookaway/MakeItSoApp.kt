@@ -45,6 +45,7 @@ import com.example.cookaway.screens.login.LoginScreen
 import com.example.cookaway.screens.settings.SettingsScreen
 import com.example.cookaway.screens.sign_up.SignUpScreen
 import com.example.cookaway.screens.splash.SplashScreen
+import com.example.cookaway.screens.tasks.PostScreen
 import com.example.cookaway.screens.tasks.TasksScreen
 import com.example.cookaway.screens.withdraw.WithdrawScreen
 import com.example.cookaway.theme.MakeItSoTheme
@@ -152,6 +153,25 @@ fun NavGraphBuilder.makeItSoGraph(appState: MakeItSoAppState) {
 
   composable(WITHDRAW_SCREEN) {
     WithdrawScreen() }
+
+  composable(POST_SCREEN) {
+    PostScreen(openScreen = { route -> appState.navigate(route) }) }
+
+  composable(CREATE_POST_SCREEN){
+//    CreatePostScreen(popUpScreen = { appState.popUp() })
+    EditTaskScreen(popUpScreen = { appState.popUp() })
+  }
+
+  composable(
+    route = "$POST_SCREEN$POST_ID_ARG",
+    arguments = listOf(navArgument(POST_ID) {
+      nullable = true
+      defaultValue = null
+    })
+  ) {
+    PostScreen(openScreen = { route -> appState.navigate(route) })
+  }
+
 
   composable(
     route = "$EDIT_TASK_SCREEN$TASK_ID_ARG",

@@ -22,6 +22,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserStorageService {
   val currentUserData: Flow<UserData>
-  suspend fun topUp(balanceAmount: Double, topUpAmount: Double)
+  suspend fun topUp(topUpAmount:Double , userId: String)
+  suspend fun withdraw(topUpAmount: Double, userId: String)
+
 //  suspend fun getUserData(): UserData?
+  suspend fun updatePurchaseList(postID: String, userId: String)
 }

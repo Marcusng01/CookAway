@@ -24,7 +24,14 @@
 
     <!-- TasksScreen -->
     <string name="tasks">CookAway</string>
-    <string name="buy">Buy</string>
+    <string name="buy">Buy Recipe</string>
+    <string name="view">View Recipe</string>
+    <string name="confirm_purchase">Confirm Purchase?</string>>
+    <string name="balance_after_purchase">Balance After Purchase: RM</string>
+    <string name="yes">Yes</string>
+    <string name="okay">Okay</string>
+    <string name="not_enough">You do not have enough to purchase this recipe</string>
+    <string name="create">Create</string>
 
     <!-- EditTaskScreen -->
     <string name="edit_task">Edit your task</string>
@@ -49,7 +56,6 @@
     <string name="sign_out_description">You will have to sign in again to see your tasks.</string>
     <string name="delete_account_title">Delete account?</string>
     <string name="delete_account_description">You will lose all your tasks and your account will be deleted. This action is irreversible.</string>
-
 
     <!-- FCM -->
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
