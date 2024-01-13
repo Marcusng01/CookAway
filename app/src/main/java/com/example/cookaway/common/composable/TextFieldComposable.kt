@@ -17,6 +17,7 @@ limitations under the License.
 package com.example.cookaway.common.composable
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -29,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import com.example.cookaway.R.drawable as AppIcon
 import com.example.cookaway.R.string as AppText
 
@@ -44,6 +46,24 @@ fun BasicField(
     modifier = modifier,
     value = value,
     onValueChange = { onNewValue(it) },
+    label = { Text(stringResource(text)) },
+    placeholder = { Text(stringResource(text)) }
+  )
+}
+
+
+@Composable
+fun LargeField(
+  @StringRes text: Int,
+  value: String,
+  onNewValue: (String) -> Unit,
+  modifier: Modifier = Modifier
+) {
+  OutlinedTextField(
+    modifier = modifier.height(300.dp),
+    value = value,
+    onValueChange = { onNewValue(it) },
+    label = { Text(stringResource(text)) },
     placeholder = { Text(stringResource(text)) }
   )
 }
@@ -55,6 +75,7 @@ fun MoneyField(@StringRes text: Int, value: String, onNewValue: (String) -> Unit
     modifier = modifier,
     value = value,
     onValueChange = { onNewValue(it) },
+    label = { Text(stringResource(text)) },
     placeholder = { Text(stringResource(text)) },
     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
   )
@@ -68,7 +89,7 @@ fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier =
     modifier = modifier,
     value = value,
     onValueChange = { onNewValue(it) },
-//    onValueChange = {},
+    label = { Text(stringResource(AppText.email)) },
     placeholder = { Text(stringResource(AppText.email)) },
     leadingIcon = { Icon(imageVector = Icons.Default.Email, contentDescription = "Email") }
   )
@@ -108,6 +129,7 @@ private fun PasswordField(
     modifier = modifier,
     value = value,
     onValueChange = { onNewValue(it) },
+    label = { Text(text = stringResource(placeholder)) },
     placeholder = { Text(text = stringResource(placeholder)) },
     leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = "Lock") },
     trailingIcon = {

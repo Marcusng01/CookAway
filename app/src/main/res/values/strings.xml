@@ -42,6 +42,9 @@
     <string name="time">Time</string>
     <string name="flag">Flag</string>
     <string name="priority">Priority</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="price">Price (RM)</string>
+    <string name="create_post">Create your recipe</string>
 
     <!-- SettingsScreen -->
     <string name="settings">Settings</string>

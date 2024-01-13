@@ -88,7 +88,7 @@ private fun CardEditor(
       Column(modifier = Modifier.weight(1f)) { Text(stringResource(title), color = highlightColor) }
 
       if (content.isNotBlank()) {
-        Text(text = content, modifier = Modifier.padding(16.dp, 0.dp))
+        Text(text = content, modifier = Modifier.padding(16.dp, 0.dp).weight(2f))
       }
 
       Icon(painter = painterResource(icon), contentDescription = "Icon", tint = highlightColor)
@@ -248,6 +248,7 @@ fun PostDescription(description: String) {
     Text(text = description)
   }
 }
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PostPurchaseOrView(
@@ -298,7 +299,7 @@ private fun BuyCard(
   }
 
   if (showWarningDialog) {
-    if(balanceAmount > price){
+    if(balanceAmount >= price){
       AlertDialog(
         title = { Text(stringResource(R.string.confirm_purchase)) },
         text = { Text(stringResource(R.string.balance_after_purchase) + (balanceAmount-price).toString()) },

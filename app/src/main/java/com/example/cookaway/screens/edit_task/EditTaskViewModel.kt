@@ -79,17 +79,17 @@ class EditTaskViewModel @Inject constructor(
     task.value = task.value.copy(priority = newValue)
   }
 
-  fun onDoneClick(popUpScreen: () -> Unit) {
-    launchCatching {
-      val editedTask = task.value
-      if (editedTask.id.isBlank()) {
-        storageService.save(editedTask)
-      } else {
-        storageService.update(editedTask)
-      }
-      popUpScreen()
-    }
-  }
+//  fun onDoneClick(popUpScreen: () -> Unit) {
+//    launchCatching {
+//      val editedTask = task.value
+//      if (editedTask.id.isBlank()) {
+//        storageService.save(editedTask)
+//      } else {
+//        storageService.update(editedTask)
+//      }
+//      popUpScreen()
+//    }
+//  }
 
   private fun Int.toClockPattern(): String {
     return if (this < 10) "0$this" else "$this"

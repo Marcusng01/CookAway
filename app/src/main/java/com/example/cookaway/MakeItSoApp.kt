@@ -39,6 +39,7 @@ import androidx.navigation.navArgument
 import com.example.cookaway.common.composable.PermissionDialog
 import com.example.cookaway.common.composable.RationaleDialog
 import com.example.cookaway.common.snackbar.SnackbarManager
+import com.example.cookaway.screens.create_post.CreatePostScreen
 import com.example.cookaway.screens.deposit.DepositScreen
 import com.example.cookaway.screens.edit_task.EditTaskScreen
 import com.example.cookaway.screens.login.LoginScreen
@@ -158,8 +159,8 @@ fun NavGraphBuilder.makeItSoGraph(appState: MakeItSoAppState) {
     PostScreen(openScreen = { route -> appState.navigate(route) }) }
 
   composable(CREATE_POST_SCREEN){
-//    CreatePostScreen(popUpScreen = { appState.popUp() })
-    EditTaskScreen(popUpScreen = { appState.popUp() })
+    CreatePostScreen(popUpScreen = { appState.popUp() })
+//    EditTaskScreen(popUpScreen = { appState.popUp() })
   }
 
   composable(

@@ -16,9 +16,11 @@ limitations under the License.
 
 package com.example.cookaway.model.service.impl
 
+import com.example.cookaway.model.Post
 import com.example.cookaway.model.Task
 import com.example.cookaway.model.service.AccountService
 import com.example.cookaway.model.service.StorageService
+import com.example.cookaway.model.service.UserStorageService
 import com.example.cookaway.model.service.trace
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
@@ -31,7 +33,7 @@ import kotlinx.coroutines.tasks.await
 
 class StorageServiceImpl
 @Inject
-constructor(private val firestore: FirebaseFirestore, private val auth: AccountService) :
+constructor(private val firestore: FirebaseFirestore, private val auth: AccountService, private val userStorageService: UserStorageService) :
   StorageService {
 
   @OptIn(ExperimentalCoroutinesApi::class)
@@ -44,16 +46,30 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
   override suspend fun getTask(taskId: String): Task? =
     firestore.collection(TASK_COLLECTION).document(taskId).get().await().toObject()
 
-  override suspend fun save(task: Task): String =
+  override suspend fun save(post: Post): String =
     trace(SAVE_TASK_TRACE) {
-      val taskWithUserId = task.copy(userId = auth.currentUserId)
-      firestore.collection(TASK_COLLECTION).add(taskWithUserId).await().id
+      var userId = auth.currentUserId
+      val taskWithUserId = post.copy(userId = userId)
+      var postId = firestore.collection(POST_COLLECTION).add(taskWithUserId).await().id
+      userStorageService.updatePurchaseList(postId, userId)
+      userId
     }
 
-  override suspend fun update(task: Task): Unit =
+  override suspend fun update(post: Post): Unit =
     trace(UPDATE_TASK_TRACE) {
-      firestore.collection(TASK_COLLECTION).document(task.id).set(task).await()
+      firestore.collection(POST_COLLECTION).document(post.id).set(post).await()
     }
+
+//  override suspend fun save(task: Task): String =
+//    trace(SAVE_TASK_TRACE) {
+//      val taskWithUserId = task.copy(userId = auth.currentUserId)
+//      firestore.collection(TASK_COLLECTION).add(taskWithUserId).await().id
+//    }
+//
+//  override suspend fun update(task: Task): Unit =
+//    trace(UPDATE_TASK_TRACE) {
+//      firestore.collection(TASK_COLLECTION).document(task.id).set(task).await()
+//    }
 
   override suspend fun delete(taskId: String) {
     firestore.collection(TASK_COLLECTION).document(taskId).delete().await()
@@ -63,6 +79,7 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
   companion object {
     private const val USER_ID_FIELD = "userId"
     private const val TASK_COLLECTION = "tasks"
+    private const val POST_COLLECTION = "posts"
     private const val SAVE_TASK_TRACE = "saveTask"
     private const val UPDATE_TASK_TRACE = "updateTask"
   }

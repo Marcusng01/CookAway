@@ -17,16 +17,12 @@ limitations under the License.
 package com.example.cookaway.screens.deposit
 
 import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.cookaway.model.UserData
 import com.example.cookaway.model.service.AccountService
 import com.example.cookaway.model.service.LogService
 import com.example.cookaway.model.service.UserStorageService
 import com.example.cookaway.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 @HiltViewModel

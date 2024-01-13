@@ -103,8 +103,6 @@ fun TasksScreenContent(
         endActionIcon = AppIcon.ic_settings,
         endAction = { onSettingsClick(openScreen) }
       )
-
-
       LazyColumn {
         items(posts, key = { it.id }) { postItem ->
           val isInPurchaseList = postItem.id in currentUserData.purchaseList
