@@ -17,6 +17,7 @@ limitations under the License.
 package com.example.cookaway.screens.tasks
 
 import android.annotation.SuppressLint
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cookaway.R.drawable as AppIcon
 import com.example.cookaway.R.string as AppText
 import com.example.cookaway.common.composable.ActionToolbar
+import com.example.cookaway.common.composable.CookAwayTabRow
 import com.example.cookaway.common.composable.PostCard
 import com.example.cookaway.common.ext.smallSpacer
 import com.example.cookaway.common.ext.toolbarActions
@@ -48,8 +50,8 @@ fun TasksScreen(
   val userData = viewModel.currentUserData.collectAsStateWithLifecycle(UserData())
   val posts = viewModel
     .posts
+    .value
     .collectAsStateWithLifecycle(emptyList())
-  val options by viewModel.options
 
   TasksScreenContent(
     onSettingsClick = viewModel::onSettingsClick,
@@ -59,15 +61,17 @@ fun TasksScreen(
     posts = posts.value,
     onBuyClick = viewModel::onBuyClick,
     currentUserData = userData.value,
+    tabHeaders = viewModel.tabHeaders,
+    onTabSelected = viewModel::onTabSelected,
+    currentTab = viewModel.currentTab.value,
+    iconList =  viewModel.iconList
   )
-
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 @ExperimentalMaterialApi
 fun TasksScreenContent(
-//  modifier: Modifier = Modifier,
   openScreen: (String) -> Unit,
   onSettingsClick: ((String) -> Unit) -> Unit,
   onCreateClick: ((String) -> Unit) -> Unit,
@@ -75,6 +79,10 @@ fun TasksScreenContent(
   onBuyClick: (Post,UserData) -> Unit,
   posts: List<Post>,
   currentUserData: UserData,
+  tabHeaders: List<String>,
+  onTabSelected: (String) -> Unit,
+  currentTab: String,
+  @DrawableRes iconList: List<Int>
 ) {
   Scaffold(
     floatingActionButton = {
@@ -103,6 +111,11 @@ fun TasksScreenContent(
         endActionIcon = AppIcon.ic_settings,
         endAction = { onSettingsClick(openScreen) }
       )
+      CookAwayTabRow(
+        tabHeaders = tabHeaders,
+        onTabSelected = onTabSelected,
+        currentTab = currentTab,
+        iconList = iconList)
       LazyColumn {
         items(posts, key = { it.id }) { postItem ->
           val isInPurchaseList = postItem.id in currentUserData.purchaseList
@@ -120,14 +133,3 @@ fun TasksScreenContent(
     }
   }
 }
-//@OptIn(ExperimentalMaterialApi::class)
-//@Composable
-//fun TasksScreenPreview() {
-//  MakeItSoTheme {
-//    TasksScreenContent(
-//      onSettingsClick = { },
-//      openScreen = { },
-//      posts = emptyList<Post>(),
-//    )
-//  }
-//}

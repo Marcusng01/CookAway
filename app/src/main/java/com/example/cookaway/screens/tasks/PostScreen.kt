@@ -67,16 +67,6 @@ fun PostScreenContent(
   post: List<Post>,
 ) {
   Scaffold(
-    floatingActionButton = {
-      FloatingActionButton(
-        onClick = { },
-        backgroundColor = MaterialTheme.colors.primary,
-        contentColor = MaterialTheme.colors.onPrimary,
-        modifier = Modifier.padding(16.dp)
-      ) {
-        Icon(Icons.Filled.Add, "Add")
-      }
-    }
   ) {
     Column(modifier = Modifier
       .fillMaxWidth()

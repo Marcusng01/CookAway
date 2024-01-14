@@ -27,6 +27,7 @@ import com.example.cookaway.common.ext.passwordMatches
 import com.example.cookaway.common.snackbar.SnackbarManager
 import com.example.cookaway.model.service.AccountService
 import com.example.cookaway.model.service.LogService
+import com.example.cookaway.model.service.UserStorageService
 import com.example.cookaway.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -34,6 +35,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
   private val accountService: AccountService,
+  private val userStorageService: UserStorageService,
   logService: LogService
 ) : MakeItSoViewModel(logService) {
   var uiState = mutableStateOf(SignUpUiState())
@@ -74,6 +76,7 @@ class SignUpViewModel @Inject constructor(
 
     launchCatching {
       accountService.linkAccount(email, password)
+      userStorageService.createUser(accountService.currentUserId)
       openAndPopUp(SPLASH_SCREEN, SIGN_UP_SCREEN)
       //openAndPopUp(SETTINGS_SCREEN, SIGN_UP_SCREEN)
     }

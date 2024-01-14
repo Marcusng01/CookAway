@@ -77,6 +77,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
     implementation("com.google.accompanist:accompanist-permissions:0.30.1")
     implementation("com.google.dagger:hilt-android:2.47")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
     ksp("com.google.dagger:hilt-compiler:2.47")
 
     //Firebase

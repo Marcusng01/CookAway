@@ -47,8 +47,14 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
     }
     awaitClose { listener.remove() }
   }
+  override suspend fun createUser(userId:String): Unit =
+    trace(CREATE_USER_TRACE) {
+      val emptyUser = mapOf("balance" to 0.0, "purchaseList" to ArrayList<String>())
+      val docRef = firestore.collection(USERS_COLLECTION).document(userId)
+      docRef.set(emptyUser).await()
+    }
 
-  override suspend fun topUp(topUpAmount: Double, userId:String ): Unit =
+    override suspend fun topUp(topUpAmount: Double, userId:String ): Unit =
     trace(TOP_UP_BALANCE_TRACE) {
       val docRef = firestore.collection(USERS_COLLECTION).document(userId)
       docRef.update(BALANCE_FIELD, FieldValue.increment(topUpAmount)).await()
@@ -72,6 +78,7 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
       }
     }
   companion object {
+    private const val CREATE_USER_TRACE = "createUser"
     private const val USERS_COLLECTION = "users"
     private const val BALANCE_FIELD = "balance"
     private const val PURCHASE_LIST_FIELD = "purchaseList"

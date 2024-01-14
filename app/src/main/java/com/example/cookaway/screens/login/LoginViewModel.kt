@@ -16,6 +16,7 @@ limitations under the License.
 
 package com.example.cookaway.screens.login
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import com.example.cookaway.LOGIN_SCREEN
 import com.example.cookaway.R.string as AppText
@@ -52,6 +53,7 @@ class LoginViewModel @Inject constructor(
   }
 
   fun onSignInClick(openAndPopUp: (String, String) -> Unit) {
+    Log.v("email",email)
     if (!email.isValidEmail()) {
       SnackbarManager.showMessage(AppText.email_error)
       return

@@ -79,9 +79,9 @@ fun LoginScreenContent(
 
     BasicButton(AppText.sign_in, Modifier.basicButton()) { onSignInClick() }
 
-    BasicTextButton(AppText.forgot_password, Modifier.textButton()) {
-      onForgotPasswordClick()
-    }
+//    BasicTextButton(AppText.forgot_password, Modifier.textButton()) {
+//      onForgotPasswordClick()
+//    }
 
     RegularCardEditor(AppText.create_account, R.drawable.ic_create_account, "", Modifier.card()) {
       onSignUpClick()

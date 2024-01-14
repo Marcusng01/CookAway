@@ -18,27 +18,21 @@ package com.example.cookaway.screens.tasks
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.cookaway.CREATE_POST_SCREEN
-import com.example.cookaway.EDIT_TASK_SCREEN
 import com.example.cookaway.POST_ID
 import com.example.cookaway.POST_SCREEN
 import com.example.cookaway.SETTINGS_SCREEN
-import com.example.cookaway.TASK_ID
 import com.example.cookaway.common.ext.idFromParameter
 import com.example.cookaway.model.Post
-import com.example.cookaway.model.Task
 import com.example.cookaway.model.UserData
 import com.example.cookaway.model.service.ConfigurationService
 import com.example.cookaway.model.service.LogService
 import com.example.cookaway.model.service.PostStorageService
-import com.example.cookaway.model.service.StorageService
 import com.example.cookaway.model.service.UserStorageService
-import com.example.cookaway.model.service.impl.UserStorageServiceImpl
-import com.example.cookaway.model.service.trace
 import com.example.cookaway.screens.MakeItSoViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import com.example.cookaway.R.drawable as AppIcon
 
 @HiltViewModel
 class TasksViewModel @Inject constructor(
@@ -46,12 +40,15 @@ class TasksViewModel @Inject constructor(
   logService: LogService,
   private val postStorageService: PostStorageService,
   private val userStorageService: UserStorageService,
-  private val configurationService: ConfigurationService,
 ) : MakeItSoViewModel(logService) {
-  val options = mutableStateOf<List<String>>(listOf())
-  val posts = postStorageService.allPosts
+  var posts = mutableStateOf(postStorageService.allPosts)
   val currentUserData = postStorageService.currentUserData
   val selectedPost = mutableStateOf(Post())
+
+  val tabHeaders = listOf("All","Owned","My Recipes")
+  var iconList = listOf(AppIcon.ic_all_recipes,AppIcon.ic_owned,AppIcon.ic_my_recipes)
+  var currentTab = mutableStateOf("All")
+
   init {
     val selectedPostId = savedStateHandle.get<String>(POST_ID)
     if (selectedPostId != null) {
@@ -61,17 +58,22 @@ class TasksViewModel @Inject constructor(
     }
   }
 
-//  fun loadTaskOptions() {
-//    val hasEditOption = configurationService.isShowTaskEditButtonConfig
-//    options.value = TaskActionOption.getOptions(hasEditOption)
-//  }
-//
-//  fun onTaskCheckChange(task: Task) {
-//    launchCatching { storageService.update(task.copy(completed = !task.completed)) }
-//  }
-//
-//  fun onAddClick(openScreen: (String) -> Unit) = openScreen(EDIT_TASK_SCREEN)
-//
+  fun onTabSelected(selectedTab: String){
+    if (selectedTab == "All"){
+      posts.value = postStorageService.allPosts
+      currentTab.value = selectedTab
+    }
+    else if (selectedTab == "Owned"){
+      posts.value = postStorageService.purchasedPosts
+      currentTab.value = selectedTab
+    }
+    else if (selectedTab == "My Recipes"){
+      posts.value = postStorageService.myPosts
+      currentTab.value = selectedTab
+    }
+
+  }
+
   fun onViewClick(openScreen: (String) -> Unit, post: Post){
     openScreen("$POST_SCREEN?$POST_ID={${post.id}}")
   }
@@ -89,23 +91,6 @@ class TasksViewModel @Inject constructor(
     }
   }
 
-//    userStorageService.deduct(price, sellerId)
-//
-//  fun onTaskActionClick(openScreen: (String) -> Unit, task: Task, action: String) {
-//    when (TaskActionOption.getByTitle(action)) {
-//      TaskActionOption.EditTask -> openScreen("$EDIT_TASK_SCREEN?$TASK_ID={${task.id}}")
-//      TaskActionOption.ToggleFlag -> onFlagTaskClick(task)
-//      TaskActionOption.DeleteTask -> onDeleteTaskClick(task)
-//    }
-//  }
-//
-//  private fun onFlagTaskClick(task: Task) {
-//    launchCatching { storageService.update(task.copy(flag = !task.flag)) }
-//  }
-//
-//  private fun onDeleteTaskClick(task: Task) {
-//    launchCatching { storageService.delete(task.id) }
-//  }
   companion object {
     private const val PURCHASE_TRACE = "purchase"
   }

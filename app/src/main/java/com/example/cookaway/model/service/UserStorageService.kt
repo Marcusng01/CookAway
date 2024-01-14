@@ -26,5 +26,7 @@ interface UserStorageService {
   suspend fun withdraw(topUpAmount: Double, userId: String)
 
 //  suspend fun getUserData(): UserData?
+  suspend fun createUser(userId:String)
+
   suspend fun updatePurchaseList(postID: String, userId: String)
 }

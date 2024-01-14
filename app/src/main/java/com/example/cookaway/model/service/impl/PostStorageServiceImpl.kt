@@ -25,6 +25,7 @@ import com.example.cookaway.model.service.PostStorageService
 import com.example.cookaway.model.service.StorageService
 import com.example.cookaway.model.service.UserStorageService
 import com.example.cookaway.model.service.trace
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
 import com.google.firebase.firestore.toObject
@@ -34,6 +35,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
+import java.util.stream.Collectors.toList
 
 class PostStorageServiceImpl
 @Inject
@@ -56,12 +58,11 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
   @OptIn(ExperimentalCoroutinesApi::class)
   override val purchasedPosts: Flow<List<Post>>
     get() = userData.currentUserData.flatMapLatest { userData ->
-      val purchaseList = userData.purchaseList
-      val queries = purchaseList.map { postId ->
-        firestore.collection(POST_COLLECTION).document(postId).get().await()
+      if(userData.purchaseList.isNotEmpty()) {
+        firestore.collection(POST_COLLECTION).whereIn(FieldPath.documentId(), userData.purchaseList).dataObjects()
+      } else {
+        flowOf(emptyList<Post>()) // return an empty list
       }
-      val posts = queries.filterNotNull().map { it.toObject<Post>()!! }
-      flowOf(posts)
     }
   override suspend fun getPost(postId: String): Post? =
     firestore.collection(POST_COLLECTION).document(postId).get().await().toObject()
