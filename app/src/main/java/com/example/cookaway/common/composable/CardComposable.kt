@@ -301,8 +301,8 @@ private fun BuyCard(
     }
     else{
       AlertDialog(
-        title = { Text(stringResource(R.string.confirm_purchase)) },
-        text = { Text(stringResource(R.string.balance_after_purchase) + (balanceAmount-price).toString()) },
+        title = { Text(stringResource(R.string.insufficient_balance)) },
+        text = { Text(stringResource(R.string.not_enough)) },
         dismissButton = { DialogCancelButton(R.string.okay) { showWarningDialog = false } },
         confirmButton = {},
         onDismissRequest = { showWarningDialog = false }

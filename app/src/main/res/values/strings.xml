@@ -30,6 +30,7 @@
     <string name="balance_after_purchase">Balance After Purchase: RM</string>
     <string name="yes">Yes</string>
     <string name="okay">Okay</string>
+    <string name="insufficient_balance">Insufficient Balance</string>
     <string name="not_enough">You do not have enough to purchase this recipe</string>
     <string name="create">Create</string>
 
