@@ -25,6 +25,7 @@ import kotlin.reflect.KFunction1
 @Composable
 fun DepositScreen(
     viewModel: DepositViewModel = hiltViewModel(),
+    popUpScreen: () -> Unit,
 ){
     val userData = viewModel.currentUserData.collectAsStateWithLifecycle(UserData()).value
     var balanceAmount by viewModel.balanceAmount
@@ -33,7 +34,7 @@ fun DepositScreen(
     DepositScreenContent(
         topUpAmount = topUpAmount,
         onTopUpChange = viewModel::onTopUpChange,
-        onTopUpClick = viewModel::onTopUpClick
+        onTopUpClick = { viewModel.onTopUpClick(popUpScreen) }
     )}
 
 @Composable
@@ -45,7 +46,10 @@ fun DepositScreenContent(
     onTopUpClick: () -> Unit,
 ){
     Column(
-        modifier = modifier.fillMaxWidth().fillMaxHeight().verticalScroll(rememberScrollState()),
+        modifier = modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         MoneyField(R.string.deposit, topUpAmount, onTopUpChange, Modifier.fieldModifier())

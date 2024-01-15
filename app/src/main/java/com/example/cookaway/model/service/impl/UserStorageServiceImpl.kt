@@ -1,21 +1,9 @@
-/*
-Copyright 2022 Google LLC
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    https://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
- */
 
 package com.example.cookaway.model.service.impl
 
+import android.app.AlertDialog
+import android.content.Context
 import androidx.compose.runtime.MutableState
 import com.example.cookaway.model.UserData
 import com.example.cookaway.model.service.AccountService
@@ -54,16 +42,33 @@ constructor(private val firestore: FirebaseFirestore, private val auth: AccountS
       docRef.set(emptyUser).await()
     }
 
-    override suspend fun topUp(topUpAmount: Double, userId:String ): Unit =
+  override suspend fun topUp(topUpAmount: Double, userId:String ): Unit =
     trace(TOP_UP_BALANCE_TRACE) {
       val docRef = firestore.collection(USERS_COLLECTION).document(userId)
       docRef.update(BALANCE_FIELD, FieldValue.increment(topUpAmount)).await()
     }
 
-  override suspend fun withdraw(deductAmount: Double, userId:String): Unit =
+  override suspend fun deductMoney(deductAmount: Double, userId:String): Unit =
     trace(WITHDRAW_BALANCE_TRACE) {
       val docRef = firestore.collection(USERS_COLLECTION).document(userId)
       docRef.update(BALANCE_FIELD, FieldValue.increment(-deductAmount)).await()
+    }
+
+  override suspend fun withdraw(deductAmount: Double, userId: String, context: Context, popUpScreen: () -> Unit): Unit =
+    trace(WITHDRAW_BALANCE_TRACE) {
+      val docRef = firestore.collection(USERS_COLLECTION).document(userId)
+      val snapshot = docRef.get().await()
+      val currentBalance = snapshot[BALANCE_FIELD] as? Double ?: 0.0
+      if (currentBalance - deductAmount < 0) {
+        AlertDialog.Builder(context)
+          .setTitle("Error")
+          .setMessage("Withdrawal amount exceeds the current balance.")
+          .setPositiveButton("OK", null)
+          .show()
+      } else {
+        docRef.update(BALANCE_FIELD, FieldValue.increment(-deductAmount)).await()
+        popUpScreen()
+      }
     }
 
   override suspend fun updatePurchaseList(postID: String, userId: String):Unit =
